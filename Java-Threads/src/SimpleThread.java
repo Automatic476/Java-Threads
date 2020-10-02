@@ -41,7 +41,7 @@ public class SimpleThread extends Thread {
 		SimpleThread[] values = new SimpleThread[args.length];
 		//System.out.println(file);
 		
-		for (int i = 0; i < values.length; i++) {
+		for (int i = 0; i < args.length; i++) {
 
 			System.out.println(values[i]);
 			//values[i].start(); 
