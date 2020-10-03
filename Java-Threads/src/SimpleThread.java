@@ -1,11 +1,11 @@
 /**
- * Program generates two threads each of which displays its name 5 times then
+ * Program generates three threads from the command line each of which displays its name 5 times then
  * quits. Used in CS346 (Operating Systems) Lab 4
  * 
  * (see The Java Tutorial, Lesson 15)
  * 
- * @author andrianoff
- * @version 15 Feb 2018
+ * @author Jason Green & Maggie Sweeney
+ * @version 2 Oct 2020
  */
 public class SimpleThread extends Thread
 {
