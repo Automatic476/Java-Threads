@@ -41,7 +41,7 @@ public class SimpleThread extends Thread
 	 * The main method creates two threads and launches them.
 	 */
 	public static void main(String[] args) {
-
+print("test");
 			String[] values = new String[args.length];
 			
 			for (int i = 0; i < values.length; i++) {
