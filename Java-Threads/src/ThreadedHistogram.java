@@ -1,3 +1,4 @@
+
 /**
  * This program uses threads to read words from a file 
  * and update frequencies stored in shared 
@@ -12,98 +13,84 @@
 */
 import java.io.*;
 
-public class ThreadedHistogram
-{
- public static void main(String[] args)
- {
-	 // - initialize array
- int[] counts = new int[21];
+public abstract class ThreadedHistogram {
+	public static void main(String[] args) {
 
-//- create two FileReaderThread’s, each to read from
-// a different file
- 
- }
-}
-//--------------------------------------------------------------------------
-abstract class FileReaderThread extends Thread {
+		// - initialize array
+		int[] counts = new int[21];
 
+		// -------------------------------------------------------------------------
+		System.out.print("Test");
+		abstract class FileReaderThread extends Thread {
 
-    String filename = "";
-    File file = null;
-    private int[] freq;
-    boolean fileStarted = false;
-    boolean fileEnded = false;
-//-------------------------------------------------------------------------
- //Constructor for FileReaderThread  
-    public FileReaderThread(String fname, int[]f) {
-        filename = fname;
-        freq = f;
-    }
-//--------------------------------------------------------------------------
-    // - obtain file names from user
-    public void readFile() {
-        BufferedReader br = null;
-        System.out.println("Give File Name: " + filename);
-        try {
+			String filename = "";
+			File file = null;
+			private int[] counts;
+			boolean fileStarted = false;
+			boolean fileEnded = false;
 
-            System.out.println("inside");
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-            if(br.readLine().trim().isEmpty()) {
-                endFile();
-                return;
-                
-            } else {
-                startFile(filename);
-                String record;
-                while((record = br.readLine().trim()) != null) {
-                    parseRecord(record);
-                }
-                endFile();
-            }
-         //Error catching if file name is not correct
-        } catch(Exception ioe) {
-            ioe.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-//----------------------------------------------------------------------------
-    //method for running the file read, (run the threads)
-    public void run() {
-        while(true) {
-            System.out.println("Inside run, fileName: " + filename);
-            System.out.println("Filestarted: " + fileStarted + ", file exists: " + file.exists());
-            if(!fileStarted) {
-                readFile();
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                //Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
- //------------------------------------------------------------------
- //Implements the start and end of the file
- //  TODO wait for both threads to terminate
-    public abstract void parseRecord(String record);
+			// -------------------------------------------------------------------------
+			// Constructor for FileReaderThread
+			public FileReaderThread(String fname, int[] f) {
+				filename = fname;
+				counts = f;
+			}
 
-    public void beginFile(String filename) {
-        this.fileStarted = true;
-        this.fileEnded = false;
-    }
+			// -------------------------------------------------------------------------
+			// obtain file names from user
+			public void readFile() {
+				// Creates the bufferedReaders
+				BufferedReader br = null;
+				BufferedReader br2 = null;
 
-    public void endFile() {
-        file.delete();
-        this.fileEnded = true;
-        this.fileStarted = false;
-    }
- // TODO (hint use join method)
- //TODO - display the histogram
+				System.out.println("Give File Name: " + filename);
+				try {
+
+					br = new BufferedReader(new FileReader("B:\\myfile.txt"));
+
+					// First file read
+					System.out.println("Reading the file using readLine() method:");
+					String contentLine = br.readLine();
+					while (contentLine != null) {
+						System.out.println(contentLine);
+						contentLine = br.readLine();
+					}
+					// ------------------------------------------------------------------
+					// Error catching if file name is not correct, put this in or else the return
+					// leaks data
+				} catch (
+
+				Exception ioe) {
+					ioe.printStackTrace();
+				} finally {
+					try {
+						if (br != null)
+							br.close();
+					} catch (IOException e) { // Auto-generated catch block
+						e.printStackTrace();
+						System.out.println("Error in closing the BufferedReader");
+					}
+				}
+			}
+
+			//----------------------------------------------------------------------------
+			// method for running the file read, (run the threads)
+			// also checks if file actually has anything in it
+			public void run() {
+				while (true) {
+					System.out.println("Thread to read: " + filename);
+
+					// Message of execution with name of file
+					System.out.println("File Started: " + fileStarted + ", file exists: " + file.exists());
+					if (!fileStarted) {
+						readFile(); // open file
+						// TODO read words from file and update array frequency and print number of
+						// words read
+					}
+				}
+			}
+			// TODO (hint use join method)
+			// TODO - display the histogram
+		}
+	} // main bracket
 }
