@@ -16,16 +16,12 @@ public class ThreadedHistogram
 {
  public static void main(String[] args)
  {
+	 // - initialize array
  int[] counts = new int[21];
- // Insert code here to:
- // - initialize array
- // - obtain file names from user
- // - create two FileReaderThread’s, each to read from
- // a different file
- // - run the threads
- // - wait for both threads to terminate
- // (hint use join method)
- // - display the histogram
+
+//- create two FileReaderThread’s, each to read from
+// a different file
+ 
  }
 }
 //--------------------------------------------------------------------------
@@ -44,9 +40,10 @@ abstract class FileReaderThread extends Thread {
         freq = f;
     }
 //--------------------------------------------------------------------------
+    // - obtain file names from user
     public void readFile() {
         BufferedReader br = null;
-        System.out.println("Base call: " + filename);
+        System.out.println("Give File Name: " + filename);
         try {
 
             System.out.println("inside");
@@ -63,6 +60,7 @@ abstract class FileReaderThread extends Thread {
                 }
                 endFile();
             }
+         //Error catching if file name is not correct
         } catch(Exception ioe) {
             ioe.printStackTrace();
         } finally {
@@ -75,7 +73,7 @@ abstract class FileReaderThread extends Thread {
         }
     }
 //----------------------------------------------------------------------------
-    //method for running the file read
+    //method for running the file read, (run the threads)
     public void run() {
         while(true) {
             System.out.println("Inside run, fileName: " + filename);
@@ -86,16 +84,17 @@ abstract class FileReaderThread extends Thread {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
+                //Auto-generated catch block
                 e.printStackTrace();
             }
         }
     }
  //------------------------------------------------------------------
-  //Implements the start and end of the file
+ //Implements the start and end of the file
+ //  TODO wait for both threads to terminate
     public abstract void parseRecord(String record);
 
-    public void startFile(String filename) {
+    public void beginFile(String filename) {
         this.fileStarted = true;
         this.fileEnded = false;
     }
@@ -105,4 +104,6 @@ abstract class FileReaderThread extends Thread {
         this.fileEnded = true;
         this.fileStarted = false;
     }
+ // TODO (hint use join method)
+ //TODO - display the histogram
 }
