@@ -11,76 +11,66 @@
 /* ThreadedHistogram.java
 */
 import java.io.*;
+import java.util.Scanner;
 
 public class ThreadedHistogram
 {
- public static void main(String[] args)
+ public static void main(String[] args) throws FileNotFoundException
  {
-	 // - initialize array
- int[] counts = new int[21];
-
-//- create two FileReaderThread’s, each to read from
-// a different file
+	 	// - initialize array
+	 	int[] counts = new int[21];
+		String word;
+		String filename;
+		
+		Scanner console = new Scanner(System.in);
+		
+		// Obtain name of files from users
+		System.out.print("Enter name of text file: ");
+		filename = console.next();
+		
+		Scanner sc = new Scanner(new File(filename));
+		
+		FileReaderThread file1 = new FileReaderThread(filename, counts);
+		file1.start();
+		FileReaderThread file2 = new FileReaderThread(filename, counts);
+		file2.start();
+		
+		try { 
+		file1.join();
+		file2.join();
+		System.out.println("Main thread will not terminate before child.");
+		}
+		catch (InterruptedException e) {
+			System.out.println("Main thread interrupted.");
+		}
+		
  
  }
 }
 //--------------------------------------------------------------------------
-abstract class FileReaderThread extends Thread {
+class FileReaderThread extends Thread { 
+	private String filename = "";
+ 	private int[] freq;
+//    File file = null;
+//    private int[] counts;
+//    boolean fileStarted = false;
+//    boolean fileEnded = false;
 
 
-    String filename = "";
-    File file = null;
-    private int[] freq;
-    boolean fileStarted = false;
-    boolean fileEnded = false;
+    
 //-------------------------------------------------------------------------
  //Constructor for FileReaderThread  
-    public FileReaderThread(String fname, int[]f) {
+public FileReaderThread(String fname, int[] f) {
         filename = fname;
         freq = f;
     }
-//--------------------------------------------------------------------------
-    // - obtain file names from user
-    public void readFile() {
-        BufferedReader br = null;
-        System.out.println("Give File Name: " + filename);
-        try {
 
-            System.out.println("inside");
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-            if(br.readLine().trim().isEmpty()) {
-                endFile();
-                return;
-                
-            } else {
-                startFile(filename);
-                String record;
-                while((record = br.readLine().trim()) != null) {
-                    parseRecord(record);
-                }
-                endFile();
-            }
-         //Error catching if file name is not correct
-        } catch(Exception ioe) {
-            ioe.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
 //----------------------------------------------------------------------------
     //method for running the file read, (run the threads)
     public void run() {
-        while(true) {
-            System.out.println("Inside run, fileName: " + filename);
-            System.out.println("Filestarted: " + fileStarted + ", file exists: " + file.exists());
-            if(!fileStarted) {
-                readFile();
-            }
+        
+            System.out.println("Thread to read: " + filename + " - started.");
+            for(int i = 0; i < freq.length; i++) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -88,22 +78,8 @@ abstract class FileReaderThread extends Thread {
                 e.printStackTrace();
             }
         }
-    }
+   
  //------------------------------------------------------------------
- //Implements the start and end of the file
- //  TODO wait for both threads to terminate
-    public abstract void parseRecord(String record);
 
-    public void beginFile(String filename) {
-        this.fileStarted = true;
-        this.fileEnded = false;
-    }
-
-    public void endFile() {
-        file.delete();
-        this.fileEnded = true;
-        this.fileStarted = false;
-    }
- // TODO (hint use join method)
- //TODO - display the histogram
+}
 }
