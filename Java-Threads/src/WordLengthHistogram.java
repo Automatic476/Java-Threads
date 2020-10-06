@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * Program to read the contents of a text file and display a histogram of the 
@@ -11,7 +12,8 @@ import java.io.File;
 public class WordLengthHistogram
 {
 
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args) throws FileNotFoundException
+	
 	{
 		int[] freq = new int[21];
 		String word;
@@ -44,13 +46,19 @@ public class WordLengthHistogram
 		
 		for (i = 1; i < list.length; i++)
 		{
-			System.out.print("[" + ((i < 10)?" ":"") + i + "]  ");
+			try {
+				System.out.print("[" + ((i < 10)?" ":"") + i + "]  ");
+			
 			for (j = 0; j < list[i]; j++)
 			{
 				System.out.print("*");
 			}
+		}
+			catch(InterruptedException e) {
+			}
+			
 			System.out.println();
 		}
+	}
 		
 	}
-}
