@@ -18,18 +18,16 @@ public class ThreadedHistogram {
 	public static void main(String[] args) throws FileNotFoundException {
 		// - initialize array
 		int[] counts = new int[21];
-		for(int i =0; i < args.length; i++) {
+		for (int i = 0; i < args.length; i++) {
 			FileReaderThread file1 = new FileReaderThread(args[i], counts);
 			file1.start();
 			try {
 				file1.join();
-			}
-			catch(Exception e) {
-				System.out.println("Main thread interrupted.");
+			} catch (Exception e) {
+				System.out.println("Main thread interrupted." + e);
 			}
 		}
-		
-		
+
 //		String filename;
 //		Scanner console = new Scanner(System.in);
 //		for(int i = 0; i < 3; i++) {
@@ -65,7 +63,7 @@ class FileReaderThread extends Thread {
 		freq = f;
 	}
 
-//----------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 	// method for running the file read, (run the threads)
 	public void run() {
 
@@ -81,28 +79,23 @@ class FileReaderThread extends Thread {
 			displayHistogram();
 			System.out.println("There were " + wordcount + " words in " + filename);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		// ------------------------------------------------------------------
-
 	}
-	
-	private void displayHistogram()
-	{
+
+	// -----------------------------------------------------------------------
+	private void displayHistogram() {
 		int i;
 		int j;
-		
-		for (i = 1; i < freq.length; i++)
-		{
-			System.out.print("[" + ((i < 10)?" ":"") + i + "]  ");
-			for (j = 0; j < freq[i]; j++)
-			{
+
+		for (i = 1; i < freq.length; i++) {
+			System.out.print("[" + ((i < 10) ? " " : "") + i + "]  ");
+			for (j = 0; j < freq[i]; j++) {
 				System.out.print("*");
 			}
 			System.out.println();
 		}
-		
+
 	}
 }
