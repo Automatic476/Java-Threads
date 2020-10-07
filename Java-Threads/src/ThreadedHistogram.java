@@ -14,20 +14,31 @@
 import java.io.*;
 import java.util.Scanner;
 
+
 public class ThreadedHistogram {
 	public static void main(String[] args) throws FileNotFoundException {
 		// - initialize array
 		int[] counts = new int[21];
-		for (int i = 0; i < args.length; i++) {
+		for(int i =0; i < args.length; i++) {
+			// - obtain file names from user
+			// - create two FileReaderThread’s, each to read from
+			// a different file
 			FileReaderThread file1 = new FileReaderThread(args[i], counts);
+			// - run the threads
 			file1.start();
+			// - wait for both threads to terminate
 			try {
 				file1.join();
-			} catch (Exception e) {
-				System.out.println("Main thread interrupted." + e);
+			}
+			catch(Exception e) {
+				System.out.println("Main thread interrupted.");
 			}
 		}
-
+		
+		
+		/**
+		 * Asking the user for a file name through a scanner
+		 */
 //		String filename;
 //		Scanner console = new Scanner(System.in);
 //		for(int i = 0; i < 3; i++) {
@@ -63,39 +74,48 @@ class FileReaderThread extends Thread {
 		freq = f;
 	}
 
-//--------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 	// method for running the file read, (run the threads)
 	public void run() {
 
 		System.out.println("Thread to read: " + filename + " - started.");
 		try {
+			// - open file
 			Scanner sc = new Scanner(new File(filename));
 			int wordcount = 0;
+			// - read words from file and update array freq
 			while (sc.hasNext()) {
 				word = sc.next();
 				freq[word.length()]++;
 				wordcount++;
 			}
+			// - display message at end of execution with name of
+			 // file and number of words read
 			displayHistogram();
 			System.out.println("There were " + wordcount + " words in " + filename);
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+		// ------------------------------------------------------------------
+		
 	}
-
-	// -----------------------------------------------------------------------
-	private void displayHistogram() {
+	
+	private void displayHistogram()
+	{
 		int i;
 		int j;
-
-		for (i = 1; i < freq.length; i++) {
-			System.out.print("[" + ((i < 10) ? " " : "") + i + "]  ");
-			for (j = 0; j < freq[i]; j++) {
+		
+		for (i = 1; i < freq.length; i++)
+		{
+			System.out.print("[" + ((i < 10)?" ":"") + i + "]  ");
+			for (j = 0; j < freq[i]; j++)
+			{
 				System.out.print("*");
 			}
 			System.out.println();
 		}
-
+		
 	}
 }
