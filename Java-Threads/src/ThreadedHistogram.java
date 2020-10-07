@@ -18,30 +18,37 @@ public class ThreadedHistogram {
 	public static void main(String[] args) throws FileNotFoundException {
 		// - initialize array
 		int[] counts = new int[21];
-		String filename;
-
-		Scanner console = new Scanner(System.in);
-
-		// Obtain name of files from users
-		System.out.print("Enter name of text file: ");
-		filename = console.next();
-
-		Scanner sc = new Scanner(new File(filename));
-
-		FileReaderThread file1 = new FileReaderThread(filename, counts);
-		file1.start();
-		FileReaderThread file2 = new FileReaderThread(filename, counts);
-		file2.start();
-
-		try {
-			file1.join();
-			file2.join();
-			System.out.println("Main thread will not terminate before child.");
-		} catch (InterruptedException e) {
-			System.out.println("Main thread interrupted.");
+		for(int i =0; i < args.length; i++) {
+			FileReaderThread file1 = new FileReaderThread(args[i], counts);
+			file1.start();
+			try {
+				file1.join();
+			}
+			catch(Exception e) {
+				System.out.println("Main thread interrupted.");
+			}
 		}
-sc.close();
-console.close();
+		
+		
+//		String filename;
+//		Scanner console = new Scanner(System.in);
+//		for(int i = 0; i < 3; i++) {
+//			System.out.print("Enter name of text file: ");
+//			filename = console.next();
+//	
+//			Scanner sc = new Scanner(new File(filename));
+//	
+//			FileReaderThread file1 = new FileReaderThread(filename, counts);
+//			file1.start();
+//			
+//			try {
+//				file1.join();
+//			}
+//			catch(Exception e) {
+//				System.out.println("Main thread interrupted.");
+//			}
+//		}
+
 	}
 }
 
@@ -49,6 +56,7 @@ console.close();
 class FileReaderThread extends Thread {
 	private String filename = "";
 	private int[] freq;
+	private String word;
 
 //-------------------------------------------------------------------------
 	// Constructor for FileReaderThread
@@ -62,15 +70,39 @@ class FileReaderThread extends Thread {
 	public void run() {
 
 		System.out.println("Thread to read: " + filename + " - started.");
-		for (int i = 0; i < freq.length; i++) {
-			System.out.print("[" + ((i < 10) ? " " : "") + i + "]  ");
-			for (int j = 0; j < freq[i]; j++) {
-				System.out.print("*");
+		try {
+			Scanner sc = new Scanner(new File(filename));
+			int wordcount = 0;
+			while (sc.hasNext()) {
+				word = sc.next();
+				freq[word.length()]++;
+				wordcount++;
 			}
-			System.out.println();
+			displayHistogram();
+			System.out.println("There were " + wordcount + " words in " + filename);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		// ------------------------------------------------------------------
 
+	}
+	
+	private void displayHistogram()
+	{
+		int i;
+		int j;
+		
+		for (i = 1; i < freq.length; i++)
+		{
+			System.out.print("[" + ((i < 10)?" ":"") + i + "]  ");
+			for (j = 0; j < freq[i]; j++)
+			{
+				System.out.print("*");
+			}
+			System.out.println();
+		}
+		
 	}
 }
